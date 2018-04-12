@@ -23,7 +23,13 @@ module Bh
       end
 
       def partial
-        @options[:split] ? 'dropdown_split' : 'dropdown'
+        if @options[:split]
+          'dropdown_split'
+        elsif Bh::Stack.find(Bh::Nav)
+          'dropdown_nav'
+        else
+          'dropdown'
+        end
       end
 
     private
@@ -31,8 +37,8 @@ module Bh
       # @return [Hash<Symbol, String>] the class that Bootstrap requires to
       #   append to a dropdown to display it as inline or block.
       def self.groupables
-        HashWithIndifferentAccess.new(:'btn-group').tap do |klass|
-          klass[false] = :dropdown
+        HashWithIndifferentAccess.new(:'dropdown').tap do |klass|
+          klass[false] = :'btn-group'
         end
       end
 

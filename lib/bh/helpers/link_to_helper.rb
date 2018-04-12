@@ -39,17 +39,20 @@ module Bh
 
       link_to.append_class! :'alert-link' if Bh::Stack.find(Bh::AlertBox)
       link_to.append_class! :'navbar-brand' if Bh::Stack.find(Bh::Vertical)
-      link_to.merge! role: :menuitem if Bh::Stack.find(Bh::Dropdown)
-      link_to.merge! tabindex: -1 if Bh::Stack.find(Bh::Dropdown)
+      link_to.append_class! :active if Bh::Stack.find(Bh::Nav) && link_to.current_page?
+      link_to.append_class! :'dropdown-item' if Bh::Stack.find(Bh::Nav) && Bh::Stack.find(Bh::Dropdown)
+      # link_to.merge! role: :menuitem if Bh::Stack.find(Bh::Dropdown)
+      # link_to.merge! tabindex: -1 if Bh::Stack.find(Bh::Dropdown)
       html = super link_to.content, link_to.url, link_to.attributes, &nil
 
       if Bh::Stack.find(Bh::Dropdown)
-        container = Bh::Base.new(self) { html }
-        container.merge! role: :presentation
-        container.render_tag :li
+        # container = Bh::Base.new(self) { html }
+        # container.merge! role: :presentation
+        # container.render_tag :li
+        html
       elsif Bh::Stack.find(Bh::Nav)
         container = Bh::Base.new(self) { html }
-        container.append_class! :active if link_to.current_page?
+        container.append_class! :'nav-item'
         container.render_tag :li
       else
         html

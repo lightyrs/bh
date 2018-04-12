@@ -29,19 +29,22 @@ module Bh
     # @yieldreturn [#to_s] the content of the dropdown.
     def dropdown(caption, options = {}, &block)
       dropdown = Bh::Dropdown.new self, nil, options, &block
-      dropdown.extract! :id, :groupable, :direction, :align, :split, :context,
-                        :size, :layout, :button
+      dropdown.extract! :id, :groupable, :direction, :align, :split, :context, :size, :layout, :button
 
       dropdown.extract_from :button, [:context, :size, :layout]
       dropdown.merge! button: {caption: caption, id: dropdown.id}
       dropdown.append_class_to! :button, :btn
+      if Bh::Stack.find(Bh::Nav)
+        dropdown.append_class_to! :button, :'nav-link'
+        dropdown.append_class_to! :menu, :'dropdown-menu-arrow'
+      end
       dropdown.append_class_to! :button, dropdown.context_class
       dropdown.append_class_to! :button, dropdown.size_class
       dropdown.append_class_to! :button, dropdown.layout_class
       dropdown.append_class_to! :div, dropdown.groupable_class
       dropdown.append_class_to! :div, dropdown.direction_class
-      dropdown.append_class_to! :ul, :'dropdown-menu'
-      dropdown.append_class_to! :ul, dropdown.align_class
+      dropdown.append_class_to! :menu, :'dropdown-menu'
+      dropdown.append_class_to! :menu, dropdown.align_class
 
       dropdown.render_partial dropdown.partial
     end
